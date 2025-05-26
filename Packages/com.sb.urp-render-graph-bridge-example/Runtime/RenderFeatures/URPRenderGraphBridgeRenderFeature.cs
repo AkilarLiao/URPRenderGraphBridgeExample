@@ -1,6 +1,6 @@
 /// <summary>
 /// Author: SmallBurger Inc
-/// Date: 2025/05/09
+/// Date: 2025/05/26
 /// Desc:
 /// </summary>
 using System.Collections.Generic;
@@ -10,6 +10,12 @@ using UnityEngine.Rendering.Universal;
 
 namespace SB.URPRenderGraphBridgeExample
 {
+    internal struct DeprecationMessage
+    {
+        internal const string CompatibilityScriptingAPIObsolete = "This rendering path is for compatibility mode only (when Render Graph is disabled). Use Render Graph API instead.";
+        internal const string CompatibilityScriptingAPIConsoleWarning = "The project currently uses the compatibility mode where the Render Graph API is disabled. Support for this mode will be removed in future Unity versions. Migrate existing ScriptableRenderPasses to the new RenderGraph API. After the migration, disable the compatibility mode in Edit > Projects Settings > Graphics > Render Graph.";
+    }
+
     [DisallowMultipleRendererFeature("URPRenderGraphBridgeRenderFeature")]
     public class URPRenderGraphBridgeRenderFeature : ScriptableRendererFeature
     {
@@ -17,32 +23,11 @@ namespace SB.URPRenderGraphBridgeExample
         {
             if (!isActive)
                 return;
-#if UNITY_EDITOR
-            RenderPipelineManager.beginContextRendering -= OnBeginContextRendering;
-            RenderPipelineManager.beginContextRendering += OnBeginContextRendering;
-#endif //UNITY_EDITOR
         }
         public override void AddRenderPasses(ScriptableRenderer renderer, 
             ref RenderingData renderingData) { }
         protected override void Dispose(bool disposing)
         {
-#if UNITY_EDITOR
-            RenderPipelineManager.beginContextRendering -= OnBeginContextRendering;
-#endif //UNITY_EDITOR
         }
-#if UNITY_EDITOR
-        private void OnBeginContextRendering(ScriptableRenderContext context, List<Camera> cameras)
-        {
-            if (m_viewDepthEdgeFlowWeight)
-                Shader.EnableKeyword(c_viewDepthEdgeFlowKeyword);
-            else
-                Shader.DisableKeyword(c_viewDepthEdgeFlowKeyword);
-        }
-
-        [Tooltip("The view edge flow weight flag.")]
-        public bool m_viewDepthEdgeFlowWeight = false;
-        
-        private const string c_viewDepthEdgeFlowKeyword = "VIEW_DEPTH_EDGE_FLOW";
-#endif //UNITY_EDITOR
     }
 }
