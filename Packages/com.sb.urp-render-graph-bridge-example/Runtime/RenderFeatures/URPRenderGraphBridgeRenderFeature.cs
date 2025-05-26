@@ -3,17 +3,20 @@
 /// Date: 2025/05/26
 /// Desc:
 /// </summary>
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 namespace SB.URPRenderGraphBridgeExample
 {
     internal struct DeprecationMessage
     {
-        internal const string CompatibilityScriptingAPIObsolete = "This rendering path is for compatibility mode only (when Render Graph is disabled). Use Render Graph API instead.";
-        internal const string CompatibilityScriptingAPIConsoleWarning = "The project currently uses the compatibility mode where the Render Graph API is disabled. Support for this mode will be removed in future Unity versions. Migrate existing ScriptableRenderPasses to the new RenderGraph API. After the migration, disable the compatibility mode in Edit > Projects Settings > Graphics > Render Graph.";
+        internal const string CompatibilityScriptingAPIObsolete = 
+            "This rendering path is for compatibility mode only (when Render Graph is disabled). Use Render Graph API instead.";
+        
+        internal const string CompatibilityScriptingAPIConsoleWarning = 
+            "The project currently uses the compatibility mode where the Render Graph API is disabled. " +
+            "Support for this mode will be removed in future Unity versions. " +
+            "Migrate existing ScriptableRenderPasses to the new RenderGraph API. After the migration, " +
+            "disable the compatibility mode in Edit > Projects Settings > Graphics > Render Graph.";
     }
 
     [DisallowMultipleRendererFeature("URPRenderGraphBridgeRenderFeature")]
@@ -23,11 +26,17 @@ namespace SB.URPRenderGraphBridgeExample
         {
             if (!isActive)
                 return;
+            m_customRenderObjectPass.ReInitialize();
         }
-        public override void AddRenderPasses(ScriptableRenderer renderer, 
-            ref RenderingData renderingData) { }
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) 
+        {
+            renderer.EnqueuePass(m_customRenderObjectPass);
+        }
         protected override void Dispose(bool disposing)
         {
+            m_customRenderObjectPass.Release();
         }
+
+        private CustomRenderObjectPass m_customRenderObjectPass = new CustomRenderObjectPass();
     }
 }
