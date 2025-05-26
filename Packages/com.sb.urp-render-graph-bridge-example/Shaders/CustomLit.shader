@@ -62,6 +62,7 @@ Shader "SB/CustomLit"
         [HideInInspector] _ZWrite("__zw", Float) = 1.0
         [HideInInspector] _BlendModePreserveSpecular("_BlendModePreserveSpecular", Float) = 1.0
         [HideInInspector] _AlphaToMask("__alphaToMask", Float) = 0.0
+        [HideInInspector] _AddPrecomputedVelocity("_AddPrecomputedVelocity", Float) = 0.0
 
         [ToggleUI] _ReceiveShadows("Receive Shadows", Float) = 1.0
         // Editmode props
@@ -162,9 +163,11 @@ Shader "SB/CustomLit"
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile _ DYNAMICLIGHTMAP_ON
-            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+            #pragma multi_compile _ USE_LEGACY_LIGHTMAPS
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
             #pragma multi_compile_fog
             #pragma multi_compile_fragment _ DEBUG_DISPLAY
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
 
             //--------------------------------------
             // GPU Instancing
@@ -182,6 +185,8 @@ Shader "SB/CustomLit"
         UsePass "Universal Render Pipeline/Lit/DepthNormals"
         UsePass "Universal Render Pipeline/Lit/Meta"
         UsePass "Universal Render Pipeline/Lit/Universal2D"
+        UsePass "Universal Render Pipeline/Lit/MotionVectors"
+        UsePass "Universal Render Pipeline/Lit/XRMotionVectors"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
