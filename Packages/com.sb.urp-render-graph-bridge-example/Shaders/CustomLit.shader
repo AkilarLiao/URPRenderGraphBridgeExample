@@ -95,7 +95,7 @@ Shader "SB/CustomLit"
 
         // ------------------------------------------------------------------
         //  Forward pass. Shades all light in a single pass. GI + emission + Fog
-        Pass
+        /*Pass
         {
             // Lightmode matches the ShaderPassName set in UniversalRenderPipeline.cs. SRPDefaultUnlit and passes with
             // no LightMode tag are also rendered by Universal Render Pipeline
@@ -175,13 +175,14 @@ Shader "SB/CustomLit"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
             ENDHLSL
-        }
+        }*/
+        UsePass "Universal Render Pipeline/Lit/ForwardLit"
         UsePass "Universal Render Pipeline/Lit/ShadowCaster"
         UsePass "Universal Render Pipeline/Lit/GBuffer"
         UsePass "Universal Render Pipeline/Lit/DepthOnly"
         UsePass "Universal Render Pipeline/Lit/DepthNormals"
         UsePass "Universal Render Pipeline/Lit/Meta"
-        UsePass "Universal Render Pipeline/Lit/Universal2D"        
+        UsePass "Universal Render Pipeline/Lit/Universal2D"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
