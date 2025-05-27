@@ -1,6 +1,6 @@
 /// <summary>
 /// Author: SmallBurger Inc
-/// Date: 2025/05/26
+/// Date: 2025/05/27
 /// Desc:
 /// </summary>
 using UnityEngine;
@@ -67,6 +67,10 @@ namespace SB.URPRenderGraphBridgeExample
             ResourceReloader.TryReloadAllNullIn(this, msr_packagePath);
 
             m_customRenderObjectPass.ReInitialize();
+#if UNITY_2023_3_OR_NEWER
+            m_customRenderObjectPass.ProcessRenderGraphInitialize();
+#endif //UNITY_2023_3_OR_NEWER
+
             m_distortionPass.ReInitialize(m_internalResource.m_distortionPS, m_internalResource.m_distortionNormalTexture,
                 m_setting);
         }

@@ -1,6 +1,6 @@
 /// <summary>
 /// Author: SmallBurger Inc
-/// Date: 2024/05/27
+/// Date: 2025/05/27
 /// Desc:
 /// </summary>
 #ifndef DISTORTION_IMPL_INCLUDED
