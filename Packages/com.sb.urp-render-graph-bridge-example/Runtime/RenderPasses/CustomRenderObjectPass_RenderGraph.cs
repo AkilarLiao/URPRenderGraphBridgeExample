@@ -86,15 +86,8 @@ namespace SB.URPRenderGraphBridgeExample
                 {
                     rgContext.cmd.DrawRendererList(data.m_rendererListHdl);
                 });
-                //builder.SetRenderFunc<PassData>(MyStaticRenderFunction);
             }
         }
-
-        static void MyStaticRenderFunction(PassData data, RasterGraphContext rgContext)
-        {
-            rgContext.cmd.DrawRendererList(data.m_rendererListHdl);
-        }
-
         // Creates a renderer list with explicit ShaderTagId and RenderStateBlock
         private void CreateRendererListWithRenderStateBlock(RenderGraph renderGraph, 
             ref CullingResults cullResults, DrawingSettings ds, FilteringSettings fs,
