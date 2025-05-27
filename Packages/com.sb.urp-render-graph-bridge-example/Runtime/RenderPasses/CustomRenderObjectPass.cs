@@ -10,7 +10,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace SB.URPRenderGraphBridgeExample
 {
-    public sealed partial class CustomRenderObjectPass : ScriptableRenderPass
+    public sealed partial class DistortionMaskRenderPass : ScriptableRenderPass
     {
         public void ReInitialize()
         {
