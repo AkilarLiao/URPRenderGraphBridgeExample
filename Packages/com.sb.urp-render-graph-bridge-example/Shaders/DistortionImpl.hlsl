@@ -6,16 +6,10 @@
 #ifndef DISTORTION_IMPL_INCLUDED
 #define DISTORTION_IMPL_INCLUDED
 
-//#include "SSAOUtility.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
-
-#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
-
-
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
-
 
 static const float3x3 c_TheTangentMatrix =
 {
@@ -23,7 +17,6 @@ static const float3x3 c_TheTangentMatrix =
     0.0, 0.0, 1.0,//Binormal
     0.0, 1.0, 0.0 //iNormal
 };
-
 
 TEXTURE2D(_DistortionNormalTexture); SAMPLER(sampler_DistortionNormalTexture);
 

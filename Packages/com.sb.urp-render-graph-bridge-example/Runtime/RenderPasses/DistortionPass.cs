@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -36,7 +37,6 @@ namespace SB.URPRenderGraphBridgeExample
 
         public void Release()
         {
-
 #if UNITY_EDITOR
             RenderPipelineManager.beginContextRendering -= OnBeginContextRendering;
 #endif //UNITY_EDITOR
@@ -54,69 +54,23 @@ namespace SB.URPRenderGraphBridgeExample
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var renderer = renderingData.cameraData.renderer;
-            CommandBuffer commandBuffer = CommandBufferPool.Get();
-            using (new ProfilingScope(commandBuffer, profilingSampler))
-            {
-                var cameraColorTargetHandle = renderer.cameraColorTargetHandle;
-            }
-
-            /*var renderer = renderingData.cameraData.renderer;
-            if (!renderer.cameraDepthTargetHandle.rt)
+            var cameraColorTargetHandle = renderer.cameraColorTargetHandle;
+            if (!cameraColorTargetHandle.rt)
                 return;
 
             CommandBuffer commandBuffer = CommandBufferPool.Get();
-            using (new ProfilingScope(commandBuffer, m_profilingSampler))
+            using (new ProfilingScope(commandBuffer, profilingSampler))
             {
-#if ENABLE_VR && ENABLE_XR_MODULE
-                if (renderingData.cameraData.xr.supportsFoveatedRendering)
-                {
-                    var qualitySetting = m_targetSetting.m_qualitySetting;
-                    // If we are downsampling we can't use the VRS texture
-                    // If it's a non uniform raster foveated rendering has to be turned off because it will keep applying non uniform for the other passes.
-                    // When calculating normals from depth, this causes artifacts that are amplified from VRS when going to say 4x4.
-                    // Thus we disable foveated because of that
-                    if (qualitySetting.m_isDownsample || SystemInfo.foveatedRenderingCaps == FoveatedRenderingCaps.NonUniformRaster)
-                    {
-                        commandBuffer.SetFoveatedRenderingMode(FoveatedRenderingMode.Disabled);
-                    }
-                    // If we aren't downsampling and it's a VRS texture we can apply foveation in this case
-                    else if (SystemInfo.foveatedRenderingCaps == FoveatedRenderingCaps.FoveationImage)
-                    {
-                        commandBuffer.SetFoveatedRenderingMode(FoveatedRenderingMode.Enabled);
-                    }
-                }
-#endif
-                var cameraColorTargetHandle = renderer.cameraColorTargetHandle;
-
-                if(m_targetSetting.m_viewMode == VIEW_MODE.VIEW_MODE_NORMAL)
-
-                {
-                    Blitter.BlitCameraTexture(commandBuffer, m_tempRT1, renderer.cameraColorTargetHandle,
-                        RenderBufferLoadAction.Load, RenderBufferStoreAction.Store, m_targetMaterial, (int)ShaderPasseType.ViewNormal);
-                }
-                else
-                {
-                    Blitter.BlitCameraTexture(commandBuffer, cameraColorTargetHandle, m_tempRT1, m_targetMaterial,
-                        (int)ShaderPasseType.AmbientOcclusion);
-                    switch (m_targetBlurType)
-                    {
-                        case BlurType.Bilateral:
-                            ProcessBilateralBlur(commandBuffer, cameraColorTargetHandle);
-                            break;
-                        case BlurType.Gaussian:
-                            ProcessGaussianBlur(commandBuffer, cameraColorTargetHandle);
-                            break;
-                        default:
-                            //case BlurType.Kawase:
-                            ProcessKawaseBlur(commandBuffer, cameraColorTargetHandle);
-                            break;
-                    }
-                }
+                CoreUtils.SetRenderTarget(commandBuffer, cameraColorTargetHandle, RenderBufferLoadAction.Load,
+                    RenderBufferStoreAction.Store, ClearFlag.None, Color.clear);
+                float4 rtHandleScale = cameraColorTargetHandle.rtHandleProperties.rtHandleScale;
+                Vector2 viewportScale = cameraColorTargetHandle.useScaling ? rtHandleScale.xy : Vector2.one;
+                Blitter.BlitTexture(commandBuffer, viewportScale, m_distortionMaterial, 0);
             }
             context.ExecuteCommandBuffer(commandBuffer);
             CommandBufferPool.Release(commandBuffer);
-            */
         }
+        
 
 #if UNITY_EDITOR
         private void OnBeginContextRendering(ScriptableRenderContext context, List<Camera> cameras)
@@ -144,8 +98,7 @@ namespace SB.URPRenderGraphBridgeExample
         }
 
         private Material m_distortionMaterial = null;
-
-        //Texture2D distortionNormalTexture, Setting setting
+        
         private Texture2D m_targetDistortionNormalTexture = null;
         private Setting m_targetSetting = null;
 

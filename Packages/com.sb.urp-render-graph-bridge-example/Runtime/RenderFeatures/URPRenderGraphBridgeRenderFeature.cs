@@ -22,7 +22,7 @@ namespace SB.URPRenderGraphBridgeExample
 
         [Tooltip("The normal texture u speed")]
         [Range(-2.0f, 2.0f)]
-        public float m_normalTextureUSpeed = 0.05f;
+        public float m_normalTextureUSpeed = 0.01f;
 
         [Tooltip("The normal texture v speed")]
         [Range(-2.0f, 2.0f)]
@@ -30,27 +30,19 @@ namespace SB.URPRenderGraphBridgeExample
 
         [Tooltip("The normal distortion range")]
         [Range(0.0f, 2.0f)]
-        public float m_normalDistortion = 1.3f;
-
-        //[Tooltip("The start depth weight")]
-        //[Range(0.0f, 0.99f)]
-        //public float m_startDepthWeight = 0.15f;
-
-        //[Tooltip("The depth pow")]
-        //[Range(0.01f, 10.0f)]
-        //public float m_depthPow = 3.0f;
-
+        public float m_normalDistortion = 0.002f;
+        
         [Tooltip("The linear start")]
         [Range(1.0f, 1000.0f)]
-        public float m_linearStart = 300.0f;
+        public float m_linearStart = 20.0f;
 
         [Tooltip("The linear end")]
         [Range(1.0f, 2000.0f)]
-        public float m_linearEnd = 800.0f;
+        public float m_linearEnd = 50.0f;
 
         [Tooltip("The linear density")]
         [Range(0.0001f, 100.0f)]
-        public float m_density = 1.0f;
+        public float m_density = 0.3f;
     }
 
     internal struct DeprecationMessage
@@ -92,11 +84,6 @@ namespace SB.URPRenderGraphBridgeExample
 
         private CustomRenderObjectPass m_customRenderObjectPass = new CustomRenderObjectPass();
         private DistortionPass m_distortionPass = new DistortionPass();
-
-        //[SerializeField]
-        //[HideInInspector]
-        //[Reload("Shaders/Distortion.shader")]
-        //private Shader m_distortionPS = null;
 
         [SerializeField]
         private Setting m_setting = new Setting();
