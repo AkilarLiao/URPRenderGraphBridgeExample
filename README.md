@@ -4,26 +4,26 @@ This project demonstrates how to implement both traditional URP `ScriptableRende
 
 ## 🧩 Features
 
-- ✅ FullScreenPass implementation (Legacy & RG)
-- ✅ RenderObjectPass equivalent in both systems
-- ✅ Sealed architecture separation for clean compilation
+- ✅ DistortionFullScreenPass implementation (Legacy & RG)
+- ✅ CustomRenderObjectPass equivalent in both systems
+- ✅ Partial architecture separation for clean compilation
 - ✅ Version-based conditional compilation (Unity 2022.3 vs Unity 6+)
 - ✅ Modular & minimal design for educational use
 
 ## 🛠️ Requirements
 
-- Unity 2022.3.x (for legacy URP)
+- Unity 2022.3.x (for legacy URP, copy com.sb.urp-render-graph-bridge-example to Packages folder)
 - Unity 6000.x (for RenderGraph version)
 
-## 📁 Folder Overview
+## 📁 Folder & File Overview
 
-- `/Scripts/LegacyURP`: Traditional URP Passes
-- `/Scripts/RenderGraphURP`: Unity 6.0 RenderGraph versions
-- `/Scripts/Shared`: Common data & logic
-- `/Shaders`: Shared materials/shaders
+- `/Runtime/RenderFeatures/URPRenderGraphBridgeRenderFeature.cs`: Traditional URP RenderFeature
+- `/Runtime/RenderPasses`: Reference RenderPass, with _RenderGraph is RenderGraph Implement(Unity 6.0 RenderGraph versions)
+- `/Shaders`: Reference shaders
+- `/Tests`: Reference demo
 
 ## 🧪 How to Run
 
 1. Open the project in Unity
-2. Open the provided example scene
+2. Open Tests/SampleScene.unity
 3. Play in editor to compare outputs
