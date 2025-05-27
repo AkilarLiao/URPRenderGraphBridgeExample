@@ -12,20 +12,33 @@ This project demonstrates how to implement both traditional URP `ScriptableRende
 
 ## 🛠️ Requirements
 
-- Unity 2022.3.x (for legacy URP, copy com.sb.urp-render-graph-bridge-example to Packages folder)
-- Unity 6000.x (for RenderGraph version)
+- **Unity 2022.3.x**  
+  For legacy URP version. Copy `com.sb.urp-render-graph-bridge-example` into your project's `Packages/` folder.
 
-## 📁 Folder & File Overview
+- **Unity 6000.x** (Unity 6.x Preview)  
+  Supports native `RenderGraph` API. Install normally via Package Manager or local package reference.
+  
+## 📁 Folder Structure
 
-- `/Runtime/RenderFeatures/URPRenderGraphBridgeRenderFeature.cs`: Traditional URP RenderFeature
-- `/Runtime/RenderPasses`: Reference RenderPass, with _RenderGraph is RenderGraph Implement(Unity 6.0 RenderGraph versions)
-- `/Shaders`: Reference shaders
-- `/Tests`: Reference demo
+/Runtime/
+└── RenderFeatures/URPRenderGraphBridgeRenderFeature.cs # Entry point for RenderFeature
+└── RenderPasses/ # Legacy & RenderGraph-based passes
 
-![Fog effect preview](Images/Demo.gif)
+/Shaders/ # Reference shaders
+/Tests/SampleScene.unity # Demo scene with comparison output
+/Images/Demo.gif # Visual reference
 
-## 🧪 How to Run
+## 🧪 Getting Started
 
-1. Open the project in Unity
-2. Open Tests/SampleScene.unity
-3. Play in editor to compare outputs
+1. Open the project with **Unity 2022.3** or **Unity 6000+**
+2. Open the scene at `Tests/SampleScene.unity`
+3. Hit **Play** to see both legacy and RenderGraph effects in action
+
+## 💡 Why This Exists
+
+Unity's RenderGraph (introduced in Unity 6.0) offers better performance and clearer GPU scheduling, but many URP features were built on the older `ScriptableRenderPass` system.  
+This example shows how to **bridge** the gap between these systems — perfect for:
+
+- Porting old RenderFeatures to new Unity versions
+- Learning RenderGraph in a modular, minimal setup
+- Comparing architecture and behavior between the two systems
