@@ -22,6 +22,8 @@ This project demonstrates how to implement both traditional URP `ScriptableRende
 - `/Shaders`: Reference shaders
 - `/Tests`: Reference demo
 
+![Fog effect preview](Images/Demo.gif)
+
 ## 🧪 How to Run
 
 1. Open the project in Unity
