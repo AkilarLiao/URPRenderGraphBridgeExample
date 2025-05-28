@@ -20,7 +20,7 @@ namespace SB.URPRenderGraphBridgeExample
     public sealed partial class DistortionPass : ScriptableRenderPass
     {
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
-        {
+        {   
             UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
 
             var cameraDepth = resourceData.cameraDepth;

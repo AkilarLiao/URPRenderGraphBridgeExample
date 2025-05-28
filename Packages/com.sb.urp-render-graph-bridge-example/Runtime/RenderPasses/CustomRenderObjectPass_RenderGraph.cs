@@ -29,14 +29,15 @@ namespace SB.URPRenderGraphBridgeExample
 
             using (var builder = renderGraph.AddRasterRenderPass<PassData>(passName, out var passData, profilingSampler))
             {
-                // Currently, ForwardLights' ForwardPlus implementation exposes only m_ZBinsBuffer
-                // and m_TileMasksBuffer, but there is no way to explicitly declare usage of these
-                // specific global buffers in the RenderGraph. As a result, we are forced to call
-                // builder.UseAllGlobalTextures(true), which binds *all* global resources,
-                // even those that are completely unrelated to this pass. This is highly inefficient
-                // and not ideal.
+                // Currently, the ForwardPlus implementation in ForwardLights only exposes m_ZBinsBuffer
+                // and m_TileMasksBuffer. However, the RenderGraph API does not allow us to explicitly
+                // declare the usage of just these specific global buffers for this pass.
+                // As a workaround, we are forced to call builder.UseAllGlobalTextures(true),
+                // which binds *all* global textures and buffers, even those unrelated to this pass.
+                // This is inefficient and not ideal, as it prevents RenderGraph from optimizing
+                // resource usage and tracking dependencies accurately.
 
-                // var zbinHandle = graph.ImportBuffer(m_ZBinsBuffer); // Import AFTER SetData()
+                // var zbinHandle = graph.ImportBuffer(m_ZBinsBuffer); // Ideally, we would use this:
                 // builder.UseBuffer(zbinHandle);
                 builder.UseAllGlobalTextures(true);
 
@@ -64,21 +65,20 @@ namespace SB.URPRenderGraphBridgeExample
 
                 // Generate renderer list with required RenderStateBlock (even if no state changes are intended)
                 CreateRendererListWithRenderStateBlock(renderGraph, ref renderingData.cullResults, drawingSettings,
-                    m_filteringSettings, /*m_renderStateBlock, */ref passData.m_rendererListHdl);
+                    m_filteringSettings, ref passData.m_rendererListHdl);
 
                 builder.UseRendererList(passData.m_rendererListHdl);
 
-                // Prevent RenderGraph from culling this pass due to lack of visible outputs.
-                // Some passes (e.g. opaque drawing) may appear unused but are essential.
-                // Disable automatic culling for this pass (always run)
+                // Ensure this pass is always executed, even if it appears to have no visible outputs.
+                // Some passes (e.g. opaque drawing) might seem unused to RenderGraph, but are actually essential.
+                // By setting AllowPassCulling(false), we disable automatic culling for this pass.
                 builder.AllowPassCulling(false);
 
-                // 那你應該幫我補上，這可能會造成RenderGraph無法進行合比處理才對
-                // Although we do not intend to modify any render state,
-                // the RendererListParams API requires us to provide a RenderStateBlock.
-                // Unfortunately, RenderGraph interprets this as a potential global state change,
-                // so we must explicitly allow it to avoid warnings/errors.
-                // Allow changes to global render state (risky but needed in some cases)
+                // This setting tells the RenderGraph: “This pass will modify global rendering states.”
+                // As long as the pass performs a draw call(whether it’s opaque, transparent, UI, etc.),
+                // it is recommended to set this to true.
+                // This way, RenderGraph will handle the pass carefully, avoiding improper merging or reordering,
+                // and helping to prevent rendering errors.
                 builder.AllowGlobalStateModification(true);
 
                 // Actual draw call (GPU work)
